@@ -52,53 +52,23 @@ if page == "Dataset Loading & Training":
 
     # load
     if option == "Pretrained Model":
-      if st.button("Load Dataset and Train Model"):
-        if os.path.isdir(data_path):
-            with st.spinner('Loading Dataset...'):
-                X, y = load_dataset(data_path, num_samples)
+      if st.button("Train Model"):
 
-            st.success("Dataset loaded successfully!")
-
-            st.write(f"Dataset loaded: {X.shape[0]} samples.")
-
-            st.write("## Dataset Preview")
-            fig, axs = plt.subplots(nrows=26, ncols=10, figsize=(20, 50))
-            axs = axs.flatten()
-            for i, letter in enumerate(letters):
-                ids = np.where(y == i)[0]
-                for j in range(10):  # Hiển thị 10 mẫu cho mỗi chữ cái
-                    img = X[ids[j]]
-                    img = Image.fromarray(img)
-                    axs[i * 10 + j].imshow(img, cmap='gray')
-                    axs[i * 10 + j].axis('off')
-                    if j == 0:
-                        axs[i * 10 + j].set_title(letter)
-                
-            plt.tight_layout()
-            st.pyplot(fig)
-
-            if X is not None and y is not None:
-                
                 with st.spinner('Loading model...'):
-                    X_train, X_test, y_train_ohe, y_test_ohe = prep_dataset(X, y, test_size)
-                    model = tensorflow.keras.models.load_model("Model.h5")
+                    #X_train, X_test, y_train_ohe, y_test_ohe = prep_dataset(X, y, test_size)
+                    model = tensorflow.keras.models.load_model("NEWEST.h5")
 
                     st.session_state.model = model
                     st.session_state.y_label = letters
 
                 st.success("Model loaded successfully!")
 
-                test_loss, test_accuracy = model.evaluate(X_test, y_test_ohe)
+                #test_loss, test_accuracy = model.evaluate(X_test, y_test_ohe)
                 
-                st.write("## Evaluation on Test Set:")
-                st.write(f"Test Accuracy: {test_accuracy*100:.2f}%. "
-                         f"Test Loss: {test_loss:.4f}")
+                #st.write("## Evaluation on Test Set:")
+                #st.write(f"Test Accuracy: {test_accuracy*100:.2f}%. "
+                #         f"Test Loss: {test_loss:.4f}")
             
-            else:
-                st.error("MODEL_LOADING FAILED")
-
-        else:
-            st.error("Invalid dataset path!")
 
     # load
     elif option == "Custom Setting":
@@ -134,6 +104,7 @@ if page == "Dataset Loading & Training":
                     start_time = time.time()
                     model = Train_model(X_train)
                     history = fit_model(model, X_train, y_train_ohe, epochs)
+                    model.save("ANOTHER.h5")
                     end_time = time.time()
 
                     # Tính thời gian chạy
